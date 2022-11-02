@@ -2,13 +2,14 @@ import express from 'express';
 import mongoose from 'mongoose';
 import multer from 'multer';
 
-import {registerValidation, loginValidation, postCreateValidation} from './validations/validations.js';
+import {registerValidation, loginValidation, postCreateValidation, CreatorCreateValidation} from './validations/validations.js';
 
 import checkAuth from './utils/checkAuth.js';
 import handleValidationErrors from "./utils/handleValidationErrors.js";
 
 import * as UserController from "./controllers/UserController.js";
 import * as PostController from "./controllers/PostController.js";
+import * as CreatorController from "./controllers/CreatorController.js";
 
 import cors from 'cors'
 
@@ -52,8 +53,15 @@ app.post('/uploads',  upload.single('image'), (req, res) => {
     })
 })
 
+app.get('/creator', CreatorController.getAll)
+app.get('/creator/:id', CreatorController.getOne)
+app.post('/creator', checkAuth, CreatorCreateValidation , handleValidationErrors, CreatorController.create)
+app.patch('/creator/:id', checkAuth, CreatorCreateValidation , handleValidationErrors, CreatorController.update)
+app.delete('/creator/:id', checkAuth, CreatorController.remove);
+
 app.get('/posts', PostController.getAll)
 app.get('/posts/:id', PostController.getOne)
+app.get('/posts/tags/:tags', PostController.getTags);
 app.post('/posts', checkAuth, postCreateValidation, handleValidationErrors, PostController.create)
 app.patch('/posts/:id', checkAuth, postCreateValidation, handleValidationErrors, PostController.update)
 app.delete('/posts/:id', checkAuth, PostController.remove);

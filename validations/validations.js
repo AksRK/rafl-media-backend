@@ -17,3 +17,9 @@ export const postCreateValidation = [
     body('imageUrl', 'Неверная ссылка на изображение').isString(),
     body('content', 'Статья не может быть пустой..').isLength({ min: 10 }).isString(),
 ]
+
+export const CreatorCreateValidation = [
+    body('fullName', 'Введите имя креатора').isLength({ min: 3}).isString(),
+    body('description', 'Введите описание креатора').isLength({ min: 3}).isString(),
+    body('imageUrl', 'Неверная ссылка на изображение').isLength({ min: 3}).isString(),
+]

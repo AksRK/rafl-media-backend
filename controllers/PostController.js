@@ -1,5 +1,18 @@
 import PostModel from '../models/Post.js';
 
+export const getTags = async (req, res) => {
+    try {
+        const postsTag = req.params
+        const posts = await PostModel.find(postsTag)
+        res.json(posts)
+    }catch (err) {
+        console.log(err)
+        res.status(500).json({
+            message: 'Не удалось получить статьи',
+        })
+    }
+};
+
 export const getAll = async (req, res) => {
 
     try {
@@ -90,11 +103,14 @@ export const create = async (req, res) => {
 
     try {
         const doc = new PostModel({
+            typePost: req.body.typePost,
+            tags: req.body.tags,
             title: req.body.title,
             description: req.body.description,
             imageUrl: req.body.imageUrl,
             content: req.body.content,
             user: req.userId,
+
         })
 
         const post = await doc.save()

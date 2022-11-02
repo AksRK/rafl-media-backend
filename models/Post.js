@@ -17,6 +17,10 @@ const PostSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
+    tags: {
+        type: String,
+        required: true,
+    },
     viewsCount: {
         type: Number,
         default: 0,
@@ -26,6 +30,11 @@ const PostSchema = new mongoose.Schema({
         ref: 'User',
         required: true,
     },
+
+    typePost: {
+        type: String,
+        required: true
+    }
 }, {
     timestamps: true,
 })
