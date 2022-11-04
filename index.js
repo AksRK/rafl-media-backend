@@ -2,14 +2,22 @@ import express from 'express';
 import mongoose from 'mongoose';
 import multer from 'multer';
 
-import {registerValidation, loginValidation, postCreateValidation, CreatorCreateValidation} from './validations/validations.js';
+import {
+    registerValidation,
+    loginValidation,
+    postCreateValidation,
+    creatorCreateValidation,
+    creatorUpdateValidation,
+    creatorPostCreateValidation} from './validations/validations.js';
 
 import checkAuth from './utils/checkAuth.js';
 import handleValidationErrors from "./utils/handleValidationErrors.js";
 
 import * as UserController from "./controllers/UserController.js";
-import * as PostController from "./controllers/PostController.js";
 import * as CreatorController from "./controllers/CreatorController.js";
+import * as CreatorPostController from "./controllers/CreatorPostController.js";
+import * as PostController from "./controllers/PostController.js";
+
 
 import cors from 'cors'
 
@@ -39,11 +47,11 @@ app.use('/uploads', express.static('uploads'))
 app.use(cors())
 
 app.get('/', (req, res) => {
-    res.send('hello world')
+    res.send('Hi')
 })
 
 app.post('/auth/login', loginValidation, handleValidationErrors, UserController.login)
-app.post('/auth/register', registerValidation, handleValidationErrors, UserController.register)
+app.post('/auth/register',checkAuth, registerValidation, handleValidationErrors, UserController.register)
 app.get('/auth/me', checkAuth, UserController.getMe)
 
 app.post('/uploads',  upload.single('image'), (req, res) => {
@@ -54,14 +62,25 @@ app.post('/uploads',  upload.single('image'), (req, res) => {
 })
 
 app.get('/creator', CreatorController.getAll)
+// app.get('/creator/tst/:id', CreatorController.tst)
 app.get('/creator/:id', CreatorController.getOne)
-app.post('/creator', checkAuth, CreatorCreateValidation , handleValidationErrors, CreatorController.create)
-app.patch('/creator/:id', checkAuth, CreatorCreateValidation , handleValidationErrors, CreatorController.update)
+app.post('/creator', checkAuth, creatorCreateValidation , handleValidationErrors, CreatorController.create)
+app.patch('/creator/:id', checkAuth, creatorUpdateValidation , handleValidationErrors, CreatorController.update)
 app.delete('/creator/:id', checkAuth, CreatorController.remove);
+
+app.get('/creator/posts/:id', CreatorPostController.getOne)
+app.get('/creator/posts/login/:creator', CreatorPostController.getCreatorPosts)
+app.post('/creator/posts', checkAuth, creatorPostCreateValidation, handleValidationErrors, CreatorPostController.create)
+app.patch('/creator/posts/:id', checkAuth, creatorPostCreateValidation, handleValidationErrors, CreatorPostController.update)
+app.patch('/creator/posts/like/:id', handleValidationErrors, CreatorPostController.like)
+app.delete('/creator/posts/:id', checkAuth, CreatorPostController.remove);
+
+
 
 app.get('/posts', PostController.getAll)
 app.get('/posts/:id', PostController.getOne)
-app.get('/posts/tags/:tags', PostController.getTags);
+app.get('/posts/category/:category', PostController.getCategory);
+app.patch('/posts/like/:id', handleValidationErrors, PostController.like)
 app.post('/posts', checkAuth, postCreateValidation, handleValidationErrors, PostController.create)
 app.patch('/posts/:id', checkAuth, postCreateValidation, handleValidationErrors, PostController.update)
 app.delete('/posts/:id', checkAuth, PostController.remove);

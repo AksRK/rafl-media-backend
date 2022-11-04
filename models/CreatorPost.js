@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
-import mongoosePaginate from 'mongoose-paginate-v2'
+import mongoosePaginate from "mongoose-paginate-v2";
 
-const PostSchema = new mongoose.Schema({
+const CreatorPostSchema = new mongoose.Schema({
     title: {
         type: String,
         required: true,
@@ -19,7 +19,7 @@ const PostSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
-    category: {
+    creator: {
         type: String,
         required: true,
     },
@@ -45,6 +45,6 @@ const PostSchema = new mongoose.Schema({
 }, {
     timestamps: true,
 })
-PostSchema.plugin(mongoosePaginate)
+CreatorPostSchema.plugin(mongoosePaginate)
 
-export default mongoose.model('Post', PostSchema);
+export default mongoose.model('CreatorPost', CreatorPostSchema);

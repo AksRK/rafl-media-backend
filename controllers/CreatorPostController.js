@@ -1,9 +1,16 @@
-import PostModel from '../models/Post.js';
+import CreatorPostModel from '../models/CreatorPost.js'
 
-export const getCategory = async (req, res) => {
+export const getCreatorPosts = async (req, res) => {
+
+    const {page, perPage} = req.query
+    const options = {
+        page: parseInt(page, 10) || 1,
+        limit: parseInt(perPage, 10) || 8,
+    };
+
     try {
-        const postsTag = req.params
-        const posts = await PostModel.find(postsTag)
+        const creator = req.params
+        const posts = await CreatorPostModel.paginate({...creator}, options)
         res.json(posts)
     }catch (err) {
         console.log(err)
@@ -13,30 +20,12 @@ export const getCategory = async (req, res) => {
     }
 };
 
-export const getAll = async (req, res) => {
-    const {page, perPage} = req.query
-    const options = {
-        page: parseInt(page, 10) || 1,
-        limit: parseInt(perPage, 10) || 8,
-    };
-
-    try {
-        const posts = await PostModel.paginate({}, options)
-        res.json(posts)
-    }catch (err) {
-        console.log(err)
-        res.status(500).json({
-            message: 'Не удалось получить статьи',
-        })
-    }
-}
-
 export const getOne = async (req, res) => {
 
     try {
         const postId = req.params.id;
 
-        PostModel.findOneAndUpdate(
+        CreatorPostModel.findOneAndUpdate(
             {
                 _id: postId,
             },
@@ -77,7 +66,7 @@ export const remove = async (req, res) => {
     try {
         const postId = req.params.id
 
-        PostModel.findOneAndDelete({
+        CreatorPostModel.findOneAndDelete({
             _id: postId,
         }, (err, doc) => {
             if (err) {
@@ -107,8 +96,8 @@ export const remove = async (req, res) => {
 export const create = async (req, res) => {
 
     try {
-        const doc = new PostModel({
-            category: req.body.category,
+        const doc = new CreatorPostModel({
+            creator: req.body.creator,
             title: req.body.title,
             description: req.body.description,
             imageUrl: req.body.imageUrl,
@@ -133,15 +122,14 @@ export const update = async (req, res) => {
     try {
         const postId = req.params.id
 
-        await PostModel.updateOne({
+        await CreatorPostModel.updateOne({
             _id: postId,
         }, {
-            category: req.body.category,
+            creator: req.body.creator,
             title: req.body.title,
             description: req.body.description,
             imageUrl: req.body.imageUrl,
             content: req.body.content,
-            readAlso: req.body.readAlso,
             user: req.body.userId,
             likes: req.body.likes,
             viewsCount: req.body.viewsCount
@@ -163,7 +151,7 @@ export const like = async (req, res) => {
     try {
         const postId = req.params.id
 
-        await PostModel.updateOne({
+        await CreatorPostModel.updateOne({
             _id: postId,
         }, {
             $inc: { likes: 1 },
