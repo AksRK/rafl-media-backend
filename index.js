@@ -62,23 +62,23 @@ app.post('/uploads',  upload.single('image'), (req, res) => {
 })
 
 app.get('/creator', CreatorController.getAll)
-// app.get('/creator/tst/:id', CreatorController.tst)
 app.get('/creator/:id', CreatorController.getOne)
+app.get('/creator/login/:login', CreatorController.getOneByLogin)
 app.post('/creator', checkAuth, creatorCreateValidation , handleValidationErrors, CreatorController.create)
 app.patch('/creator/:id', checkAuth, creatorUpdateValidation , handleValidationErrors, CreatorController.update)
 app.delete('/creator/:id', checkAuth, CreatorController.remove);
 
 app.get('/creator/posts/:id', CreatorPostController.getOne)
+app.get('/creator/posts/title/:title', CreatorPostController.getOneByTitle)
 app.get('/creator/posts/login/:creator', CreatorPostController.getCreatorPosts)
 app.post('/creator/posts', checkAuth, creatorPostCreateValidation, handleValidationErrors, CreatorPostController.create)
 app.patch('/creator/posts/:id', checkAuth, creatorPostCreateValidation, handleValidationErrors, CreatorPostController.update)
 app.patch('/creator/posts/like/:id', handleValidationErrors, CreatorPostController.like)
 app.delete('/creator/posts/:id', checkAuth, CreatorPostController.remove);
 
-
-
 app.get('/posts', PostController.getAll)
 app.get('/posts/:id', PostController.getOne)
+app.get('/posts/title/:title', PostController.getOneByTitle)
 app.get('/posts/category/:category', PostController.getCategory);
 app.patch('/posts/like/:id', handleValidationErrors, PostController.like)
 app.post('/posts', checkAuth, postCreateValidation, handleValidationErrors, PostController.create)

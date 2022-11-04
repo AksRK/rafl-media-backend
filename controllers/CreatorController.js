@@ -60,6 +60,47 @@ export const getOne = async (req, res) => {
     }
 }
 
+export const getOneByLogin = async (req, res) => {
+
+    try {
+        const creatorLogin = req.params.login;
+
+        CreatorModel.findOneAndUpdate(
+            {
+                login: creatorLogin,
+            },
+            {
+                $inc: { viewsCount: 1 },
+            },
+            {
+                returnDocument: 'after',
+            },
+            ( err, doc ) => {
+                if (err) {
+                    console.log(err)
+                    return  res.status(500).json({
+                        message: 'Не удалось вернуть креатора',
+                    })
+                }
+
+                if (!doc) {
+                    return res.status(404).json({
+                        message: 'Креатор не найден'
+                    })
+                }
+
+                res.json(doc)
+            }
+        )
+
+    }catch (err) {
+        console.log(err)
+        res.status(500).json({
+            message: 'Не удалось получить креатора',
+        })
+    }
+}
+
 export const remove = async (req, res) => {
 
     try {
