@@ -77,6 +77,7 @@ app.patch('/creator/posts/like/:id', handleValidationErrors, CreatorPostControll
 app.delete('/creator/posts/:id', checkAuth, CreatorPostController.remove);
 
 app.get('/posts', PostController.getAll)
+app.get('/posts/banner', PostController.getBannerCards)
 app.get('/posts/:id', PostController.getOne)
 app.get('/posts/title/:title', PostController.getOneByTitle)
 app.get('/posts/category/:category', PostController.getCategory);

@@ -15,9 +15,35 @@ export const getCategory = async (req, res) => {
 
 export const getAll = async (req, res) => {
     const {page, perPage} = req.query
+
     const options = {
         page: parseInt(page, 10) || 1,
         limit: parseInt(perPage, 10) || 8,
+        sort: {
+            viewsCount: -1
+        }
+    };
+
+    try {
+        const posts = await PostModel.paginate({}, options)
+        res.json(posts)
+    }catch (err) {
+        console.log(err)
+        res.status(500).json({
+            message: 'Не удалось получить статьи',
+        })
+    }
+}
+
+export const getBannerCards = async (req, res) => {
+    const {cardsLimit} = req.query
+    console.log(req.query)
+
+    const options = {
+        limit: parseInt(cardsLimit, 10) || 5,
+        sort: {
+            createdAt: -1,
+        }
     };
 
     try {
